@@ -11,12 +11,6 @@
 let
   shims = callPackage ./typescript/shims.nix { };
   assets = callPackage ./assets.nix { };
-
-  watchdog-notests = pkgsi686Linux.python311.pkgs.watchdog.overridePythonAttrs (old: {
-    doCheck = false;
-    pytestCheckPhase = "true";  # Also explicitly set checkPhase to do nothing
-  });
-
   venv = pkgsi686Linux.python311.withPackages (
     py:
     (with py; [
@@ -33,7 +27,6 @@ let
       semver
     ])
     ++ [
-      watchdog-notests
       (callPackage ./python/millennium.nix)
       (callPackage ./python/core-utils.nix)
     ]
