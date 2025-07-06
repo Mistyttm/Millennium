@@ -91,6 +91,9 @@ pkgsi686Linux.stdenv.mkDerivation {
     cmake
     ninja
   ];
+  passthru = {
+    run = steam;
+  };
   configurePhase = ''
     cmake -G Ninja
     substituteInPlace scripts/posix/start.sh \
