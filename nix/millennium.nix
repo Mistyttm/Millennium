@@ -11,26 +11,29 @@
 let
   shims = callPackage ./typescript/shims.nix { };
   assets = callPackage ./assets.nix { };
+
+  watchdog-notests = pkgsi686Linux.python311.pkgs.watchdog.overridePythonAttrs (old: {
+    doCheck = false;
+    checkPhase = "true";  # Also explicitly set checkPhase to do nothing
+  });
+
   venv = pkgsi686Linux.python311.withPackages (
     py:
     (with py; [
       setuptools
       pip
-
       arrow
       psutil
       requests
       gitpython
       cssutils
       websockets
-      (watchdog.overridePythonAttrs (old: {
-        doCheck = false;  # Skip tests
-      }))
       pysocks
       pyperclip
       semver
     ])
     ++ [
+      watchdog-notests
       (callPackage ./python/millennium.nix)
       (callPackage ./python/core-utils.nix)
     ]
