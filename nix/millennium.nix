@@ -9,6 +9,14 @@
   ...
 }:
 let
+  python311-notests = pkgsi686Linux.python311.override {
+    packageOverrides = pythonFinal: pythonPrev: {
+      # Disable tests for all packages
+      buildPythonPackage = args: pythonPrev.buildPythonPackage (args // {
+        doCheck = false;
+      });
+    };
+  };
   shims = callPackage ./typescript/shims.nix { };
   assets = callPackage ./assets.nix { };
   venv = pkgsi686Linux.python311.withPackages (
@@ -22,6 +30,7 @@ let
       gitpython
       cssutils
       websockets
+      watchdog
       pysocks
       pyperclip
       semver
@@ -53,7 +62,7 @@ pkgsi686Linux.stdenv.mkDerivation {
   buildInputs = [
     shims
     assets
-    pkgsi686Linux.python311
+    python311-notests
     (pkgsi686Linux.openssl.override {
       static = true;
     })
